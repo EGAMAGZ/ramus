@@ -1,4 +1,3 @@
-
 export function init(
   cwd = Deno.cwd(),
   flags: {
