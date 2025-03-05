@@ -1,15 +1,16 @@
 {
   "version": "4",
   "specifiers": {
-    "jsr:@logtape/logtape@~0.8.2": "0.8.2",
+    "jsr:@logtape/logtape@0.9": "0.9.0",
     "jsr:@std/assert@1": "1.0.11",
-    "jsr:@std/cli@^1.0.12": "1.0.12",
+    "jsr:@std/cli@^1.0.14": "1.0.14",
     "jsr:@std/internal@^1.0.5": "1.0.5",
+    "jsr:@std/path@^1.0.8": "1.0.8",
     "npm:simple-git@^3.27.0": "3.27.0"
   },
   "jsr": {
-    "@logtape/logtape@0.8.2": {
-      "integrity": "e2ae1fc2561e8d010359b9894efb39bdb559dae44f5824540cbb26a78eee36bc"
+    "@logtape/logtape@0.9.0": {
+      "integrity": "aacdeb0e040e5723021bef8b9b8c03ad7cffb5e2146a0024c30814930f6e7c89"
     },
     "@std/assert@1.0.11": {
       "integrity": "2461ef3c368fe88bc60e186e7744a93112f16fd110022e113a0849e94d1c83c1",
@@ -17,11 +18,14 @@
         "jsr:@std/internal"
       ]
     },
-    "@std/cli@1.0.12": {
-      "integrity": "e5cfb7814d189da174ecd7a34fbbd63f3513e24a1b307feb2fcd5da47a070d90"
+    "@std/cli@1.0.14": {
+      "integrity": "b09ee9921cd476c0e08185ed2bfce682d45ecf4654f26c31b4aa244a2c5c024e"
     },
     "@std/internal@1.0.5": {
       "integrity": "54a546004f769c1ac9e025abd15a76b6671ddc9687e2313b67376125650dc7ba"
+    },
+    "@std/path@1.0.8": {
+      "integrity": "548fa456bb6a04d3c1a1e7477986b6cffbce95102d0bb447c67c4ee70e0364be"
     }
   },
   "npm": {
@@ -54,9 +58,10 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@logtape/logtape@~0.8.2",
+      "jsr:@logtape/logtape@0.9",
       "jsr:@std/assert@1",
-      "jsr:@std/cli@^1.0.12",
+      "jsr:@std/cli@^1.0.14",
+      "jsr:@std/path@^1.0.8",
       "npm:simple-git@^3.27.0"
     ]
   }
