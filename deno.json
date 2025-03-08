@@ -8,6 +8,6 @@
     "@std/cli": "jsr:@std/cli@^1.0.14",
     "@std/fmt": "jsr:@std/fmt@^1.0.6",
     "@std/path": "jsr:@std/path@^1.0.8",
-    "simple-git": "npm:simple-git@^3.27.0"
+    "execa": "npm:execa@^9.5.2"
   }
 }
