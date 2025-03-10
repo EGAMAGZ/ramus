@@ -7,10 +7,17 @@ branches at once.
 
 ## 🚀 Usage
 
-Run the following command to start using Ramus:
+To start using Ramus, run the following command:
 
 ```bash
 deno run -A jsr:@egamagz/ramus
+```
+
+Alternatively, you can install it globally with:
+
+```bash
+deno install -g jsr:@egamagz/ramus
+ramus
 ```
 
 ## 🎯 Motivation
