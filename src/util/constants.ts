@@ -11,8 +11,10 @@ To manage git branches in the current directory:
 USAGE:
     deno run -A jsr:@egamagz/ramus [DIRECTORY]`;
 
-export const UNDETERMINATED_CURRENT_BRANCH_MESSAGE = "Could not determine current branch.";
+export const UNDETERMINATED_CURRENT_BRANCH_MESSAGE =
+  "Could not determine current branch.";
 export const NO_DELETABLE_BRANCHES_MESSAGE = "No other branches to delete.";
-export const NO_SELECTED_BRANCHES_MESSAGE = "No branches selected to delete. Exiting...";
+export const NO_SELECTED_BRANCHES_MESSAGE =
+  "No branches selected to delete. Exiting...";
 
 export const OPERATION_CANCELLED_MESSAGE = "Operation cancelled.";

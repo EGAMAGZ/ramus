@@ -50,8 +50,7 @@ export function error(tty: TTY, message: string): never {
   tty.logError(
     `%cerror%c ${message}`,
     "color: red; font-weight:bold",
-    ""
+    "",
   );
   throw new GitError(message);
 }
-

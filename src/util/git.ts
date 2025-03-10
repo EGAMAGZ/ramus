@@ -17,11 +17,11 @@ export interface GitBranch {
 export async function getAllBranches(): Promise<GitBranch[]> {
   try {
     const { stdout } = await execa({ lines: true })`git branch`;
-    
+
     if (!Array.isArray(stdout)) {
       throw new Error("Unexpected output format from git branch command");
     }
-    
+
     return stdout
       .map((branch) => {
         const trimmedBranch = branch.trim();
@@ -34,7 +34,11 @@ export async function getAllBranches(): Promise<GitBranch[]> {
         };
       });
   } catch (error) {
-    throw new GitError(`Failed to get branches: ${error instanceof Error ? error.message : String(error)}`);
+    throw new GitError(
+      `Failed to get branches: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
   }
 }
 
@@ -49,6 +53,10 @@ export async function deleteBranches(branches: string[]): Promise<void> {
       await $`git branch -D ${branch}`;
     }
   } catch (error) {
-    throw new GitError(`Failed to delete branch: ${error instanceof Error ? error.message : String(error)}`);
+    throw new GitError(
+      `Failed to delete branch: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
   }
 }

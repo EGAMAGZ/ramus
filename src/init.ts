@@ -76,7 +76,8 @@ export async function init(
     }
 
     const selectedBranches = promptMultipleSelect(
-      `Please select branches to delete (${colors.yellow(`Current: ${currentBranch.name}`)
+      `Please select branches to delete (${
+        colors.yellow(`Current: ${currentBranch.name}`)
       })`,
       otherBranches,
     );

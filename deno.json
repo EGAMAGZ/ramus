@@ -1,7 +1,6 @@
 {
-  "tasks": {
-    "dev": "deno run --watch main.ts"
-  },
+  "name": "@egamagz/ramus",
+  "version": "1.0.0",
   "lock": false,
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
@@ -9,5 +8,13 @@
     "@std/fmt": "jsr:@std/fmt@^1.0.6",
     "@std/path": "jsr:@std/path@^1.0.8",
     "execa": "npm:execa@^9.5.2"
+  },
+  "exports": {
+    ".": "./mod.ts"
+  },
+  "publish": {
+    "exclude": [
+      ".github"
+    ]
   }
 }
