@@ -5,6 +5,11 @@
 Ramus is a simple command-line tool that allows you to delete multiple Git
 branches at once.
 
+[![JSR](https://jsr.io/badges/@egamagz/ramus)](https://jsr.io/@egamagz/ramus)
+[![JSR Score](https://jsr.io/badges/@egamagz/ramus/score)](https://jsr.io/@egamagz/ramus/score)
+![GitHub License](https://img.shields.io/github/license/egamagz/ramus)
+![GitHub Release](https://img.shields.io/github/v/release/egamagz/ramus)
+
 ## 🚀 Usage
 
 To start using Ramus, run the following command:
