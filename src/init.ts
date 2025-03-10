@@ -5,6 +5,7 @@ import { deleteBranches, getAllBranches } from "./util/git.ts";
 import { promptMultipleSelect } from "@std/cli/unstable-prompt-multiple-select";
 import { error, TTY } from "./util/tty.ts";
 import {
+  HELP_TEXT,
   NO_DELETABLE_BRANCHES_MESSAGE,
   NO_SELECTED_BRANCHES_MESSAGE,
   OPERATION_CANCELLED_MESSAGE,
@@ -21,6 +22,7 @@ const tty = new TTY();
 export async function init(
   cwd = Deno.cwd(),
   input: (string | number)[],
+  showHelp: boolean,
 ): Promise<void> {
   tty.log();
   tty.log(
@@ -31,6 +33,11 @@ export async function init(
     ),
   );
   tty.log();
+
+  if (showHelp) {
+    tty.log(colors.gray(HELP_TEXT));
+    return;
+  }
 
   let unresolvedDirectory: string;
   if (input.length !== 1) {
@@ -69,8 +76,7 @@ export async function init(
     }
 
     const selectedBranches = promptMultipleSelect(
-      `Please select branches to delete (${
-        colors.yellow(`Current: ${currentBranch.name}`)
+      `Please select branches to delete (${colors.yellow(`Current: ${currentBranch.name}`)
       })`,
       otherBranches,
     );
