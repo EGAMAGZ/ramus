@@ -18,4 +18,4 @@ While working with Git, I often accumulate a large number of branches that I’m
 
 ## License
 
-Apache License
+MIT License
