@@ -28,6 +28,7 @@ export class TTY {
    * @param args Arguments to log
    */
   log(...args: unknown[]): void {
+    // deno-lint-ignore no-console
     console.log(...args);
   }
 
@@ -36,6 +37,7 @@ export class TTY {
    * @param args Arguments to log as errors
    */
   logError(...args: unknown[]): void {
+    // deno-lint-ignore no-console
     console.error(...args);
   }
 }

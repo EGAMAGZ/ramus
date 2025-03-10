@@ -9,6 +9,14 @@
     "@std/path": "jsr:@std/path@^1.0.8",
     "execa": "npm:execa@^9.5.2"
   },
+  "lint": {
+    "rules": {
+      "tags": ["recommended", "jsr"],
+      "include": [
+        "no-console"
+      ]
+    }
+  },
   "exports": {
     ".": "./mod.ts"
   },
