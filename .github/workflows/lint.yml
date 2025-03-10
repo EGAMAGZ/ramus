@@ -1,0 +1,50 @@
+name: Lint, format and type checking
+
+on:
+  pull_request:
+    branches:
+      - "**"
+
+  push:
+    branches:
+      - master
+
+jobs:
+  lint:
+    name: Check linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Check linting
+        run: deno lint .
+
+  format:
+    name: Check linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Check formatting
+        run: deno fmt --check .
+
+  check:
+    name: Check typing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Check typing
+        run: deno check --doc .
