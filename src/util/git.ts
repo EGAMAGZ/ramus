@@ -1,4 +1,4 @@
-import { execa } from "execa";
+import { $, execa } from "execa";
 
 export interface GitBranch {
   name: string;
@@ -20,4 +20,10 @@ export async function getAllBranches() {
     });
 
   return branches;
+}
+
+export async function deleteBranches(branches: string[]) {
+  for (const branch of branches) {
+    await $`git branch -D ${branch}`;
+  }
 }
