@@ -60,3 +60,37 @@ export async function deleteBranches(branches: string[]): Promise<void> {
     );
   }
 }
+
+/**
+ * Retrieves the main branch of the repository
+ * @returns Promise<string> Main branch name
+ * @throws GitError if the git command fails
+ */
+export async function getMainBranch(): Promise<string> {
+  try {
+    const { stdout } = await execa({
+      lines: true,
+    })`git symbolic-ref refs/remotes/origin/HEAD`;
+
+    if (!Array.isArray(stdout)) {
+      throw new Error("Unexpected output format from git symbolic-ref command");
+    }
+
+    return stdout[0].replace("refs/remotes/origin/", "");
+  } catch (error) {
+    if (
+      error instanceof Error && error.message.includes("not a symbolic ref")
+    ) {
+      const { stdout } = await execa({ lines: true })`git remote show origin`;
+      const mainBranchMatch = stdout.join("\n").match(/HEAD branch: (.+)/);
+      if (mainBranchMatch) {
+        return mainBranchMatch[1];
+      }
+    }
+    throw new GitError(
+      `Failed to get main branch: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+  }
+}

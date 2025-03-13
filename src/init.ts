@@ -1,7 +1,7 @@
 import * as colors from "@std/fmt/colors";
 import * as path from "@std/path";
 import { Spinner } from "@std/cli/unstable-spinner";
-import { deleteBranches, getAllBranches } from "./util/git.ts";
+import { deleteBranches, getAllBranches, getMainBranch } from "./util/git.ts";
 import { promptMultipleSelect } from "@std/cli/unstable-prompt-multiple-select";
 import { error, TTY } from "./util/tty.ts";
 import {
@@ -61,6 +61,7 @@ export async function init(
     }
 
     const branches = await getAllBranches();
+    const mainBranch = await getMainBranch();
 
     const currentBranch = branches.find((b) => b.isCurrent);
     if (!currentBranch) {
@@ -69,7 +70,11 @@ export async function init(
 
     const otherBranches = branches
       .filter((b) => !b.isCurrent)
-      .map((b) => b.name);
+      .map((b) =>
+        b.name === mainBranch
+          ? `${b.name} (${colors.green("Main branch")})`
+          : b.name
+      );
 
     if (otherBranches.length === 0) {
       error(tty, NO_DELETABLE_BRANCHES_MESSAGE);
