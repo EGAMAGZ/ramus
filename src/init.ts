@@ -1,7 +1,7 @@
 import * as colors from "@std/fmt/colors";
 import * as path from "@std/path";
 import { Spinner } from "@std/cli/unstable-spinner";
-import { deleteBranches, getAllBranches } from "./util/git.ts";
+import { deleteBranches, getAllBranches, getMainBranch } from "./util/git.ts";
 import { promptMultipleSelect } from "@std/cli/unstable-prompt-multiple-select";
 import { error, TTY } from "./util/tty.ts";
 import {
@@ -60,7 +60,8 @@ export async function init(
       error(tty, `Not a git repository: ${repositoryDir}`);
     }
 
-    const branches = await getAllBranches();
+    const branches = await getAllBranches(repositoryDir);
+    const mainBranch = await getMainBranch(repositoryDir);
 
     const currentBranch = branches.find((b) => b.isCurrent);
     if (!currentBranch) {
@@ -69,7 +70,11 @@ export async function init(
 
     const otherBranches = branches
       .filter((b) => !b.isCurrent)
-      .map((b) => b.name);
+      .map((branch) =>
+        branch.name === mainBranch
+          ? `${branch.name} (${colors.green("Main branch")})`
+          : branch.name
+      );
 
     if (otherBranches.length === 0) {
       error(tty, NO_DELETABLE_BRANCHES_MESSAGE);
@@ -101,7 +106,7 @@ export async function init(
     const spinner = new Spinner({ message: "Deleting branches..." });
     spinner.start();
 
-    await deleteBranches(selectedBranches);
+    await deleteBranches(repositoryDir, selectedBranches);
 
     spinner.stop();
     tty.log(
