@@ -14,9 +14,9 @@ export interface GitBranch {
  * @returns Promise<GitBranch[]> Array of branch objects
  * @throws GitError if the git command fails
  */
-export async function getAllBranches(): Promise<GitBranch[]> {
+export async function getAllBranches(directory: string): Promise<GitBranch[]> {
   try {
-    const { stdout } = await execa({ lines: true })`git branch`;
+    const { stdout } = await execa({ lines: true })`git -C ${directory} branch`;
 
     if (!Array.isArray(stdout)) {
       throw new Error("Unexpected output format from git branch command");
@@ -47,10 +47,13 @@ export async function getAllBranches(): Promise<GitBranch[]> {
  * @param branches Array of branch names to delete
  * @throws GitError if any branch deletion fails
  */
-export async function deleteBranches(branches: string[]): Promise<void> {
+export async function deleteBranches(
+  directory: string,
+  branches: string[],
+): Promise<void> {
   try {
     for (const branch of branches) {
-      await $`git branch -D ${branch}`;
+      await $`git -C ${directory} branch -D ${branch}`;
     }
   } catch (error) {
     throw new GitError(
@@ -58,5 +61,51 @@ export async function deleteBranches(branches: string[]): Promise<void> {
         error instanceof Error ? error.message : String(error)
       }`,
     );
+  }
+}
+
+/**
+ * Retrieves the main branch of the repository
+ * @param directory The directory of the git repository
+ * @returns Promise<string | null> Main branch name or null if unable to determine
+ * @throws GitError if the git command fails
+ */
+export async function getMainBranch(directory: string): Promise<string | null> {
+  try {
+    const { stdout } = await execa({
+      lines: true,
+    })`git -C ${directory} symbolic-ref refs/remotes/origin/HEAD`;
+
+    if (!Array.isArray(stdout)) {
+      throw new Error("Unexpected output format from git symbolic-ref command");
+    }
+
+    return stdout[0].replace("refs/remotes/origin/", "");
+  } catch (error) {
+    if (
+      error instanceof Error && error.message.includes("not a symbolic ref")
+    ) {
+      return await getMainBranchFromRemote(directory);
+    }
+    return null;
+  }
+}
+
+/**
+ * Helper function to get the main branch from the remote
+ * @param directory The directory of the git repository
+ * @returns Promise<string | null> Main branch name or null if unable to determine
+ */
+async function getMainBranchFromRemote(
+  directory: string,
+): Promise<string | null> {
+  try {
+    const { stdout } = await execa({
+      lines: true,
+    })`git -C ${directory} remote show origin`;
+    const mainBranchMatch = stdout.join("\n").match(/HEAD branch: (.+)/);
+    return mainBranchMatch ? mainBranchMatch[1] : null;
+  } catch (_error) {
+    return null;
   }
 }
