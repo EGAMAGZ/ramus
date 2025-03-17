@@ -14,9 +14,9 @@ export interface GitBranch {
  * @returns Promise<GitBranch[]> Array of branch objects
  * @throws GitError if the git command fails
  */
-export async function getAllBranches(): Promise<GitBranch[]> {
+export async function getAllBranches(directory: string): Promise<GitBranch[]> {
   try {
-    const { stdout } = await execa({ lines: true })`git branch`;
+    const { stdout } = await execa({ lines: true })`git -C ${directory} branch`;
 
     if (!Array.isArray(stdout)) {
       throw new Error("Unexpected output format from git branch command");
@@ -35,8 +35,7 @@ export async function getAllBranches(): Promise<GitBranch[]> {
       });
   } catch (error) {
     throw new GitError(
-      `Failed to get branches: ${
-        error instanceof Error ? error.message : String(error)
+      `Failed to get branches: ${error instanceof Error ? error.message : String(error)
       }`,
     );
   }
@@ -47,15 +46,17 @@ export async function getAllBranches(): Promise<GitBranch[]> {
  * @param branches Array of branch names to delete
  * @throws GitError if any branch deletion fails
  */
-export async function deleteBranches(branches: string[]): Promise<void> {
+export async function deleteBranches(
+  directory: string,
+  branches: string[],
+): Promise<void> {
   try {
     for (const branch of branches) {
-      await $`git branch -D ${branch}`;
+      await $`git -C ${directory} branch -D ${branch}`;
     }
   } catch (error) {
     throw new GitError(
-      `Failed to delete branch: ${
-        error instanceof Error ? error.message : String(error)
+      `Failed to delete branch: ${error instanceof Error ? error.message : String(error)
       }`,
     );
   }
@@ -66,11 +67,11 @@ export async function deleteBranches(branches: string[]): Promise<void> {
  * @returns Promise<string> Main branch name
  * @throws GitError if the git command fails
  */
-export async function getMainBranch(): Promise<string> {
+export async function getMainBranch(directory: string): Promise<string> {
   try {
     const { stdout } = await execa({
       lines: true,
-    })`git symbolic-ref refs/remotes/origin/HEAD`;
+    })`git -C ${directory} symbolic-ref refs/remotes/origin/HEAD`;
 
     if (!Array.isArray(stdout)) {
       throw new Error("Unexpected output format from git symbolic-ref command");
@@ -81,15 +82,14 @@ export async function getMainBranch(): Promise<string> {
     if (
       error instanceof Error && error.message.includes("not a symbolic ref")
     ) {
-      const { stdout } = await execa({ lines: true })`git remote show origin`;
+      const { stdout } = await execa({ lines: true })`git -C ${directory} remote show origin`;
       const mainBranchMatch = stdout.join("\n").match(/HEAD branch: (.+)/);
       if (mainBranchMatch) {
         return mainBranchMatch[1];
       }
     }
     throw new GitError(
-      `Failed to get main branch: ${
-        error instanceof Error ? error.message : String(error)
+      `Failed to get main branch: ${error instanceof Error ? error.message : String(error)
       }`,
     );
   }

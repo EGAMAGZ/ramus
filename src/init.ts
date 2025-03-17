@@ -60,8 +60,8 @@ export async function init(
       error(tty, `Not a git repository: ${repositoryDir}`);
     }
 
-    const branches = await getAllBranches();
-    const mainBranch = await getMainBranch();
+    const branches = await getAllBranches(repositoryDir);
+    const mainBranch = await getMainBranch(repositoryDir);
 
     const currentBranch = branches.find((b) => b.isCurrent);
     if (!currentBranch) {
@@ -106,7 +106,7 @@ export async function init(
     const spinner = new Spinner({ message: "Deleting branches..." });
     spinner.start();
 
-    await deleteBranches(selectedBranches);
+    await deleteBranches(repositoryDir, selectedBranches);
 
     spinner.stop();
     tty.log(
