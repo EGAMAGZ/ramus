@@ -70,10 +70,10 @@ export async function init(
 
     const otherBranches = branches
       .filter((b) => !b.isCurrent)
-      .map((b) =>
-        b.name === mainBranch
-          ? `${b.name} (${colors.green("Main branch")})`
-          : b.name
+      .map((branch) =>
+        branch.name === mainBranch
+          ? `${branch.name} (${colors.green("Main branch")})`
+          : branch.name
       );
 
     if (otherBranches.length === 0) {
@@ -81,8 +81,7 @@ export async function init(
     }
 
     const selectedBranches = promptMultipleSelect(
-      `Please select branches to delete (${
-        colors.yellow(`Current: ${currentBranch.name}`)
+      `Please select branches to delete (${colors.yellow(`Current: ${currentBranch.name}`)
       })`,
       otherBranches,
     );

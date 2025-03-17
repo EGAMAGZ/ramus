@@ -35,7 +35,8 @@ export async function getAllBranches(directory: string): Promise<GitBranch[]> {
       });
   } catch (error) {
     throw new GitError(
-      `Failed to get branches: ${error instanceof Error ? error.message : String(error)
+      `Failed to get branches: ${
+        error instanceof Error ? error.message : String(error)
       }`,
     );
   }
@@ -56,7 +57,8 @@ export async function deleteBranches(
     }
   } catch (error) {
     throw new GitError(
-      `Failed to delete branch: ${error instanceof Error ? error.message : String(error)
+      `Failed to delete branch: ${
+        error instanceof Error ? error.message : String(error)
       }`,
     );
   }
@@ -64,10 +66,11 @@ export async function deleteBranches(
 
 /**
  * Retrieves the main branch of the repository
- * @returns Promise<string> Main branch name
+ * @param directory The directory of the git repository
+ * @returns Promise<string | null> Main branch name or null if unable to determine
  * @throws GitError if the git command fails
  */
-export async function getMainBranch(directory: string): Promise<string> {
+export async function getMainBranch(directory: string): Promise<string | null> {
   try {
     const { stdout } = await execa({
       lines: true,
@@ -82,15 +85,27 @@ export async function getMainBranch(directory: string): Promise<string> {
     if (
       error instanceof Error && error.message.includes("not a symbolic ref")
     ) {
-      const { stdout } = await execa({ lines: true })`git -C ${directory} remote show origin`;
-      const mainBranchMatch = stdout.join("\n").match(/HEAD branch: (.+)/);
-      if (mainBranchMatch) {
-        return mainBranchMatch[1];
-      }
+      return await getMainBranchFromRemote(directory);
     }
-    throw new GitError(
-      `Failed to get main branch: ${error instanceof Error ? error.message : String(error)
-      }`,
-    );
+    return null;
+  }
+}
+
+/**
+ * Helper function to get the main branch from the remote
+ * @param directory The directory of the git repository
+ * @returns Promise<string | null> Main branch name or null if unable to determine
+ */
+async function getMainBranchFromRemote(
+  directory: string,
+): Promise<string | null> {
+  try {
+    const { stdout } = await execa({
+      lines: true,
+    })`git -C ${directory} remote show origin`;
+    const mainBranchMatch = stdout.join("\n").match(/HEAD branch: (.+)/);
+    return mainBranchMatch ? mainBranchMatch[1] : null;
+  } catch (_error) {
+    return null;
   }
 }
