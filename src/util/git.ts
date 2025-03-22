@@ -1,8 +1,27 @@
-import { $, execa } from "execa";
+import { $, execa, ExecaError } from "execa";
 import { GitError } from "../exceptions.ts";
 
 /**
+ * Checks if the git command is available in the system PATH.
+ * @returns {Promise<boolean>} - Returns true if git is available, false if git is not found.
+ * @throws {Error} - Throws an error if an unexpected error occurs while checking for git.
+ */
+export async function gitCommandExists(): Promise<boolean> {
+  try {
+    await execa("git --version");
+    return true;
+  } catch (error) {
+    if (error instanceof ExecaError) {
+      return false;
+    }
+    throw error;
+  }
+}
+
+/**
  * Represents a Git branch with its name and current status
+ * @property {string} name - The name of the branch.
+ * @property {boolean} isCurrent - Whether the branch is the current branch.
  */
 export interface GitBranch {
   name: string;
@@ -10,9 +29,10 @@ export interface GitBranch {
 }
 
 /**
- * Retrieves all branches from the git repository
- * @returns Promise<GitBranch[]> Array of branch objects
- * @throws GitError if the git command fails
+ * Retrieves all branches from the specified git repository.
+ * @param directory - The path to the git repository from which to retrieve branches.
+ * @returns {Promise<GitBranch[]>} Array of branch objects containing the branch name and current status.
+ * @throws {GitError} If the git command fails, with the error message from the git command.
  */
 export async function getAllBranches(directory: string): Promise<GitBranch[]> {
   try {
@@ -43,9 +63,10 @@ export async function getAllBranches(directory: string): Promise<GitBranch[]> {
 }
 
 /**
- * Deletes the specified git branches
- * @param branches Array of branch names to delete
- * @throws GitError if any branch deletion fails
+ * Deletes the specified git branches in the given directory.
+ * @param directory - The path to the git repository where branches should be deleted.
+ * @param branches - Array of branch names to delete. Each branch name should be a valid git branch reference.
+ * @throws {GitError} If any branch deletion fails, with the error message from the git command.
  */
 export async function deleteBranches(
   directory: string,
