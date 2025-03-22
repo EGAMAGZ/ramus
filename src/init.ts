@@ -1,7 +1,7 @@
 import * as colors from "@std/fmt/colors";
 import * as path from "@std/path";
 import { Spinner } from "@std/cli/unstable-spinner";
-import { deleteBranches, getAllBranches, getMainBranch } from "./util/git.ts";
+import { deleteBranches, getAllBranches, getMainBranch, gitCommandExists } from "./util/git.ts";
 import { promptMultipleSelect } from "@std/cli/unstable-prompt-multiple-select";
 import { error, TTY } from "./util/tty.ts";
 import {
@@ -33,6 +33,10 @@ export async function init(
     ),
   );
   tty.log();
+
+  if (!(await gitCommandExists())) {
+    error(tty, "Git is not installed or not in the PATH.");
+  }
 
   if (showHelp) {
     tty.log(colors.gray(HELP_TEXT));
