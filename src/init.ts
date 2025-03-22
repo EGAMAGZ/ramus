@@ -1,7 +1,12 @@
 import * as colors from "@std/fmt/colors";
 import * as path from "@std/path";
 import { Spinner } from "@std/cli/unstable-spinner";
-import { deleteBranches, getAllBranches, getMainBranch, gitCommandExists } from "./util/git.ts";
+import {
+  deleteBranches,
+  getAllBranches,
+  getMainBranch,
+  gitCommandExists,
+} from "./util/git.ts";
 import { promptMultipleSelect } from "@std/cli/unstable-prompt-multiple-select";
 import { error, TTY } from "./util/tty.ts";
 import {
