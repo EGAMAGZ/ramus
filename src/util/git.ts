@@ -8,7 +8,7 @@ import { GitError } from "../exceptions.ts";
  */
 export async function gitCommandExists(): Promise<boolean> {
   try {
-    await execa("git --version");
+    await execa("git", ["--version"]);
     return true;
   } catch (error) {
     if (error instanceof ExecaError) {
