@@ -11,7 +11,6 @@ export async function gitCommandExists(): Promise<boolean> {
     await execa("git", ["--version"]);
     return true;
   } catch (error) {
-    console.error(error);
     if (error instanceof ExecaError) {
       return false;
     }
